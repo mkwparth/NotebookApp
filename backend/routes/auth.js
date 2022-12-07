@@ -2,8 +2,13 @@ const { Router } = require('express');
 const express=require('express');
 const router=express.Router();
 
-router.get('/',(req,res)=>{
-    res.json(["ok"]);
+const User= require('../models/User');
+
+router.post('/',(req,res)=>{
+    console.log(req.body);
+    const user=User(req.body);
+    user.save();
+    res.send(req.body)
 
 });
 

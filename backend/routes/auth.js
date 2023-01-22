@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = 'ParthiSb@dbo$y';
 
-// Create a User using: POST "/api/auth/createUser". No login required
+// ROUTE 1 : Create a User using: POST "/api/auth/createUser". No login required
 router.post('/createUser', [
     body('name', 'Enter a valid name').isLength({ min: 3 }),
     body('email', 'Enter a valid email').isEmail(),
@@ -55,7 +55,7 @@ router.post('/createUser', [
 })
 
 
-// Create a User using: POST "/api/auth/login". No login required
+// ROUTE 2 : Authenticate A USER using : POST "/api/auth/login". No login required
 router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password must be atleast 5 characters').exists(),

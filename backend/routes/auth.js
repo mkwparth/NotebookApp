@@ -4,6 +4,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
+var fetchuser = require('../middleware/fetchuser');
 
 const JWT_SECRET = 'ParthiSb@dbo$y';
 
@@ -66,17 +67,17 @@ router.post('/login', [
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const {email,password} = req.body;
+    const { email, password } = req.body;
 
     try {
-        let user= await User.findOne({email});
-        if(!user){
-            return res.status(400).json({error:"Please try to login with correct credientials"});
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ error: "Please try to login with correct credientials" });
         }
 
-        const passCompare = await bcrypt.compare(password,user.password);
-        if(!passCompare){
-            return res.status(400).json({error:"Please try to login with correct credientials"});
+        const passCompare = await bcrypt.compare(password, user.password);
+        if (!passCompare) {
+            return res.status(400).json({ error: "Please try to login with correct credientials" });
         }
 
         data = {
@@ -94,5 +95,22 @@ router.post('/login', [
         res.status(500).send("Internal Server Error ");
     }
 })
+
+
+// ROUTE 3 : Get Loggedin user details using : POST "/api/auth/getuser". Login required
+router.post('/getuser', fetchuser, async (req, res) => {
+    try {
+        userId = req.user.id;
+        const user = await User.findById(userId).select("-password");
+        res.send(user)
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error ");
+    }
+
+
+})
+
 
 module.exports = router
